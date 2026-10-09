@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Make Things Better</title>
+<title>Pivyon — Make Things Better</title>
 <meta name="description" content="Building at the edge of AI and the technologies coming next.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,7 +13,7 @@
 <body>
 
 <header class="nav mono">
-  <a href="#top" class="brand"><span class="brand-mark"></span><span data-name>Your Name</span></a>
+  <a href="#top" class="brand"><span class="brand-mark"></span><span data-name>Pivyon</span></a>
   <nav>
     <a href="#about">About</a>
     <a href="#work">Work</a>
@@ -22,35 +22,50 @@
   </nav>
 </header>
 
-<section id="top" class="hero">
-  <canvas id="field"></canvas>
-  <div class="hero-meta mono">
-    <span>AI research · Automation · Interactive tech</span>
-    <span class="lime">● Open to collaborations</span>
-  </div>
-  <h1 id="headline" aria-label="Make things better."></h1>
-  <div class="hero-foot">
-    <p>Building at the edge of AI and the technologies coming next.</p>
-    <a href="#about" class="mono muted-link">Scroll ↓</a>
+<!-- Scene 1 · Prompt: a question types itself, then docks top-left on scroll -->
+<section id="top" class="scene s-prompt">
+  <div class="stick">
+    <canvas id="field"></canvas>
+    <div id="prompt" class="prompt"><span class="lime">&gt; </span><span id="typed"></span><span id="caret" class="caret"></span></div>
+    <div id="prompt-meta" class="prompt-meta mono">
+      <span>AI research · Automation · Interactive tech</span>
+      <span class="lime">● Open to collaborations</span>
+    </div>
+    <a href="#about" id="scroll-hint" class="scroll-hint mono">Scroll ↓</a>
   </div>
 </section>
 
-<div class="ticker" aria-hidden="true"><div id="ticker-row"></div></div>
-
-<section id="about" class="about wrap">
-  <div class="about-side">
-    <div class="eyebrow mono">01 — About</div>
-    <div class="stats mono">
-      <span class="stat">3</span><span>years inside<br>advanced AI systems</span>
-      <span class="stat">0.5<span class="lime">%</span></span><span>estimated<br>engagement tier</span>
+<!-- Scene 2 · Years: the counter runs to 3.0 over a stream of prompts -->
+<section id="about" class="scene s-years">
+  <div class="stick">
+    <div class="feed" aria-hidden="true"><div id="feed-list"></div></div>
+    <div class="years">
+      <div class="eyebrow mono">01 — About</div>
+      <div id="count" class="count">0.0</div>
+      <div id="years-label" class="years-label">years in advanced AI</div>
+      <div id="tier" class="tier mono"><span class="tier-n">0.5<span class="lime">%</span></span><span>estimated<br>engagement tier</span></div>
     </div>
   </div>
+</section>
+
+<section class="bio-wrap wrap">
   <p id="bio" class="bio"></p>
 </section>
 
-<section id="work" class="work wrap">
-  <div class="section-head mono"><span class="lime">02 — Work</span><span class="grey">Hover to open</span></div>
-  <div id="domains" class="domains"></div>
+<!-- Scene 3 · Work: four areas slam in, stack, then collapse into one dot -->
+<section id="work" class="scene s-domains">
+  <div class="stick">
+    <div class="eyebrow mono domains-eyebrow">02 — Work</div>
+    <div id="domains"></div>
+    <div id="dot" class="dot"></div>
+  </div>
+</section>
+
+<!-- Scene 4 · Close: the dot becomes a line; Make things better lands -->
+<section class="s-close">
+  <div id="close-words" class="close-words"></div>
+  <div class="close-line-track"><div id="close-line" class="close-line"></div></div>
+  <div id="close-foot" class="close-foot mono"><span data-name class="paper">Pivyon</span><span class="grey">AI · automation · future tech</span></div>
 </section>
 
 <section id="film" class="film wrap">
@@ -74,7 +89,7 @@
     </form>
     <div id="sent" class="contact-sent" hidden>Message received<span class="lime blink">_</span></div>
     <footer class="mono">
-      <span>© 2026 <span data-name>Your Name</span></span>
+      <span>© 2026 <span data-name>Pivyon</span></span>
       <a id="email-link" href="mailto:you@email.com">you@email.com</a>
       <span>LinkedIn · GitHub · X</span>
     </footer>

@@ -14,7 +14,7 @@ const SCENES = [
   { name: 'Close', dur: 5, desc: 'The dot becomes a line; Make things better lands with the name' },
 ];
 const PLAYBACK = { mode: 'loop' };
-const NAME = new URLSearchParams(location.search).get('name') || 'Your Name';
+const NAME = new URLSearchParams(location.search).get('name') || 'Pivyon';
 const TAGLINE = 'AI · automation · future tech';
 
 const W = 1920, H = 1080;

@@ -20,7 +20,7 @@ Then open http://localhost:8000 (site) and http://localhost:8000/explainer/ (vid
 
 ## Customise
 
-- Name, email, ticker speed and cursor reactivity: `SITE` at the top of `main.js`
+- Name, email and cursor reactivity: `SITE` at the top of `main.js` (the site plays the video's scenes as you scroll)
 - Name in the video's closing frame: `NAME` in `explainer/explainer.js`, or `explainer/?name=Your+Name`
 - Video scene lengths: `SCENES` at the top of `explainer/explainer.js`
 - Work area copy: `DOMAINS` in `main.js` (the striped boxes are image placeholders)
