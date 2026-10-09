@@ -90,7 +90,7 @@ const boot = $('boot');
 
 // ── Hero headline: one span per character, reacting to the cursor ────────
 const headline = $('headline');
-for (const word of ['We make', 'frontier models', 'better.']) {
+for (const word of ['I make', 'frontier models', 'better.']) {
   const line = h('span', 'line');
   for (const ch of word) {
     const s = h('span', 'ch', ch);
@@ -277,7 +277,7 @@ if (!reduceMotion) tickerRow.animate([{ transform: 'translateX(0)' }, { transfor
 // ── Approach: attention arcs ─────────────────────────────────────────────
 const sAttn = $('attention');
 const attn = hiDPI($('attn'));
-const attnQ = $('attn-q'), attnHead = $('attn-head'), attnCopy = document.querySelector('.attn-copy');
+const attnQ = $('attn-q'), attnHead = $('attn-head'), attnCopy = document.querySelector('.attn-copy'), attnMeta = document.querySelector('.attn-meta');
 const HEADS = [
   { color: [200, 255, 62], label: 'head 4' },
   { color: [242, 241, 236], label: 'head 9' },
@@ -302,9 +302,16 @@ function renderAttention(t, p) {
   const c = attn, ctx = c.begin();
   const n = ATTN_TOKENS.length;
   const vertical = c.w < 760;
-  const fs = vertical ? 15 : clamp(c.w / 62, 13, 24);
+  const stickTop = c.el.getBoundingClientRect().top;
+  const copyBottom = attnCopy.getBoundingClientRect().bottom - stickTop;
+  const metaTop = attnMeta.getBoundingClientRect().top - stickTop;
+  // On phones the tokens stack between the copy and the footer label;
+  // shrink the type until all of them fit in that gap.
+  const vTop = copyBottom + 28, vBottom = metaTop - 24;
+  const fs = vertical ? clamp((vBottom - vTop) / n / 2.1, 8, 15) : clamp(c.w / 62, 13, 24);
   ctx.font = `500 ${fs}px ${MONO}`;
-  const padX = fs * 0.7, boxH = fs * 2;
+  const vStep = (vBottom - vTop) / n;
+  const padX = fs * 0.7, boxH = vertical ? Math.min(fs * 2, vStep * 0.88) : fs * 2;
   const widths = ATTN_TOKENS.map((w) => ctx.measureText(w).width + padX * 2);
   const pos = [];
   if (!vertical) {
@@ -313,14 +320,12 @@ function renderAttention(t, p) {
     const y = c.h * 0.76;
     widths.forEach((w) => { pos.push([x + w / 2, y, w]); x += w + gap; });
   } else {
-    const top = c.h * 0.37, step = (c.h * 0.46) / (n - 1);
-    widths.forEach((w, i) => pos.push([c.w * 0.3, top + i * step, w]));
+    widths.forEach((w, i) => pos.push([c.w * 0.3, vTop + vStep * (i + 0.5), w]));
   }
   // The query token sweeps across the sentence with scroll.
   const qf = clamp(p, 0, 0.999) * n;
   const q = Math.floor(qf);
   const appear = MOTION.enter(p, -0.25, 0.02);
-  const copyBottom = attnCopy.getBoundingClientRect().bottom - c.el.getBoundingClientRect().top;
   attnQ.textContent = `query → "${ATTN_TOKENS[q]}"`;
   attnHead.textContent = `layer 23 · ${HEADS.map((hd) => hd.label).join(' · ')}`;
 
