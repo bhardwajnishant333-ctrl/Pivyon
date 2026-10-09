@@ -24,14 +24,6 @@ a:hover { color: var(--lime); }
 .eyebrow { color: var(--lime); }
 canvas { display: block; }
 
-/* Boot */
-.boot { position: fixed; inset: 0; z-index: 100; background: var(--ink); display: flex; flex-direction: column; justify-content: center; gap: 18px; padding: 0 var(--gutter); transition: transform .7s cubic-bezier(.7, 0, .2, 1); cursor: pointer; }
-.boot.done { transform: translateY(-100%); }
-.boot-lines { display: flex; flex-direction: column; gap: 6px; min-height: 7.5em; color: var(--grey); text-transform: none; letter-spacing: .02em; font-size: clamp(11px, 1.2vw, 14px); }
-.boot-lines .ok { color: var(--lime); }
-.boot-bar { height: 2px; background: var(--line); max-width: 520px; }
-#boot-fill { height: 100%; width: 0; background: var(--lime); }
-
 /* Nav */
 .nav { position: fixed; top: 0; left: 0; right: 0; z-index: 30; display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 18px var(--gutter); mix-blend-mode: difference; }
 .nav a { text-decoration: none; color: #fff; }
@@ -62,6 +54,40 @@ canvas { display: block; }
 @media (max-width: 760px) {
   .hud-right { display: none; }
   .hud { top: 64px; }
+}
+
+/* Hero film */
+#field { position: absolute; inset: 0; width: 100%; height: 100%; }
+#terrain { opacity: 0; }
+.hud { opacity: 0; }
+.film-layer { position: absolute; inset: 0; pointer-events: none; }
+.f-prompt { position: absolute; left: 0; top: 0; transform-origin: left center; white-space: nowrap; font: 500 clamp(13px, 4.2vw, 64px) 'JetBrains Mono', monospace; color: var(--paper); opacity: 0; will-change: transform; }
+.f-caret { display: inline-block; width: .56em; height: 1em; margin-left: .1em; vertical-align: -.16em; background: var(--lime); }
+.f-years { position: absolute; inset: 0; opacity: 0; }
+.f-feed { position: absolute; right: var(--gutter); top: 0; bottom: 0; width: min(760px, 46vw); overflow: hidden;
+  -webkit-mask-image: linear-gradient(transparent, #000 25%, #000 75%, transparent); mask-image: linear-gradient(transparent, #000 25%, #000 75%, transparent); }
+#f-feed { display: flex; flex-direction: column; gap: clamp(14px, 1.5vw, 28px); will-change: transform; }
+#f-feed div { font: 400 clamp(13px, 1.45vw, 28px) 'JetBrains Mono', monospace; color: var(--grey); white-space: nowrap; }
+#f-feed div.hl { color: var(--lime); }
+.f-count-wrap { position: absolute; left: var(--gutter); top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 16px; }
+.f-count { font: 800 clamp(130px, 21vw, 400px)/0.82 'Archivo'; color: var(--paper); letter-spacing: -.02em; font-variation-settings: 'wdth' 62; }
+.f-years-label { font: 800 clamp(26px, 3.8vw, 72px) 'Archivo'; font-variation-settings: 'wdth' 80; text-transform: uppercase; color: var(--lime); opacity: 0; }
+.f-dom { position: absolute; left: 50%; top: 50%; width: 92vw; display: flex; flex-direction: column; align-items: center; gap: clamp(10px, 1.2vw, 20px); text-align: center; opacity: 0; will-change: transform, opacity; }
+.f-dom-idx { font: 500 clamp(14px, 1.45vw, 28px) 'JetBrains Mono', monospace; color: var(--lime); overflow: hidden; }
+.f-dom-word { font-weight: 800; line-height: .9; text-transform: uppercase; color: var(--paper); letter-spacing: -.02em; }
+.f-dom-bar { height: clamp(5px, .55vw, 10px); background: var(--lime); }
+.f-dom-desc { margin: 4px 0 0; max-width: 30em; font-size: clamp(14px, 1.2vw, 19px); line-height: 1.5; color: #b9b8b1; overflow: hidden; }
+.f-dot { position: absolute; left: 50%; top: 50%; width: 40px; height: 40px; margin: -20px 0 0 -20px; border-radius: 50%; background: var(--lime); transform: scale(0); }
+.hero h1 .line { opacity: 0; will-change: transform, opacity; }
+.hero-line-track { margin-top: clamp(14px, 2vw, 28px); }
+.hero-line { height: 4px; width: 0; background: var(--lime); }
+#hero-foot { opacity: 0; }
+.film-ctrl { position: absolute; right: var(--gutter); top: 200px; z-index: 3; }
+.film-ctrl button { font: inherit; text-transform: inherit; letter-spacing: inherit; background: rgba(11,11,13,.6); color: var(--grey); border: 1px solid var(--line); padding: 9px 12px; cursor: pointer; }
+.film-ctrl button:hover { color: var(--lime); border-color: var(--lime); }
+@media (max-width: 760px) {
+  .f-feed { left: var(--gutter); width: auto; opacity: .35; }
+  .film-ctrl { top: 140px; }
 }
 
 /* Ticker */

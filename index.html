@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Pivyon — I make frontier models better</title>
+<title>Pivyon — We make frontier models better</title>
 <meta name="description" content="Evaluation, failure analysis, post-training and scale for teams building frontier AI.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -11,11 +11,6 @@
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-
-<div id="boot" class="boot mono" aria-hidden="true">
-  <div class="boot-lines" id="boot-lines"></div>
-  <div class="boot-bar"><div id="boot-fill"></div></div>
-</div>
 
 <header class="nav mono">
   <a href="#top" class="brand"><span class="brand-mark"></span><span data-name>Pivyon</span></a>
@@ -27,29 +22,50 @@
   </nav>
 </header>
 
-<!-- Hero · a live loss landscape with an optimizer descending it -->
+<!-- Hero · plays like the explainer film, then rests on a live loss landscape -->
 <section id="top" class="hero">
+  <canvas id="field"></canvas>
   <canvas id="terrain"></canvas>
-  <div class="hud hud-left mono">
+  <div class="hud hud-left mono" id="hud-left">
     <div><span class="grey">run</span> pivyon/frontier-07</div>
     <div><span class="grey">step</span> <span id="hud-step">0</span></div>
     <div><span class="grey">loss</span> <span id="hud-loss" class="lime">—</span></div>
     <div><span class="grey">eval</span> <span id="hud-eval">—</span></div>
   </div>
-  <div class="hud hud-right mono">
+  <div class="hud hud-right mono" id="hud-right">
     <div class="grey">loss / step</div>
     <canvas id="spark" width="180" height="48"></canvas>
     <div class="live"><span class="live-dot"></span>live simulation</div>
   </div>
+
+  <div class="film-layer" aria-hidden="true">
+    <div id="f-prompt" class="f-prompt"><span class="lime">&gt; </span><span id="f-typed"></span><span id="f-caret" class="f-caret"></span></div>
+    <div id="f-years" class="f-years">
+      <div class="f-feed"><div id="f-feed"></div></div>
+      <div class="f-count-wrap">
+        <div id="f-count" class="f-count">0.0</div>
+        <div id="f-years-label" class="f-years-label">years in advanced AI</div>
+      </div>
+    </div>
+    <div id="f-domains"></div>
+    <div id="f-dot" class="f-dot"></div>
+  </div>
+
   <div class="hero-copy">
-    <h1 id="headline" aria-label="I make frontier models better."></h1>
-    <div class="hero-foot">
-      <p>I help teams building frontier AI evaluate, diagnose, improve and scale their models.</p>
+    <h1 id="headline" aria-label="We make frontier models better."></h1>
+    <div class="hero-line-track"><div id="hero-line" class="hero-line"></div></div>
+    <div id="hero-foot" class="hero-foot">
+      <p>We help teams building frontier AI evaluate, diagnose, improve and scale their models.</p>
       <div class="hero-ctas mono">
-        <a href="#services" class="btn-ghost">See what I do ↓</a>
+        <a href="#services" class="btn-ghost">See what we do ↓</a>
         <a href="#contact" class="btn-lime">Start a project →</a>
       </div>
     </div>
+  </div>
+
+  <div class="film-ctrl mono">
+    <button id="film-skip" type="button">Skip ⏭</button>
+    <button id="film-replay" type="button" hidden>↺ Replay</button>
   </div>
 </section>
 

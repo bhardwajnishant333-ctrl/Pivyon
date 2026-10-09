@@ -69,28 +69,9 @@ emailLink.textContent = SITE.email;
 const mouse = { x: -9999, y: -9999, tx: -9999, ty: -9999, nx: 0, ny: 0 };
 window.addEventListener('pointermove', (e) => { mouse.tx = e.clientX; mouse.ty = e.clientY; }, { passive: true });
 
-// ── Boot ─────────────────────────────────────────────────────────────────
-const boot = $('boot');
-(function runBoot() {
-  const lines = ['> initialising pivyon/frontier-07', '> loading checkpoint · 128 shards', '> compiling eval suite · 8 capabilities', '> attaching optimizer'];
-  const box = $('boot-lines'), fill = $('boot-fill');
-  if (reduceMotion) { boot.remove(); return; }
-  const start = performance.now(), dur = 1500;
-  let shown = 0;
-  const finish = () => { boot.classList.add('done'); setTimeout(() => boot.remove(), 800); };
-  boot.addEventListener('click', finish);
-  (function step(now) {
-    const k = clamp((now - start) / dur, 0, 1);
-    fill.style.width = k * 100 + '%';
-    while (shown < lines.length && k > shown / lines.length) box.appendChild(h('div', null, lines[shown++]));
-    if (k < 1) requestAnimationFrame(step);
-    else { box.appendChild(h('div', 'ok', '> ready')); setTimeout(finish, 250); }
-  })(start);
-})();
-
 // ── Hero headline: one span per character, reacting to the cursor ────────
 const headline = $('headline');
-for (const word of ['I make', 'frontier models', 'better.']) {
+for (const word of ['We make', 'frontier models', 'better.']) {
   const line = h('span', 'line');
   for (const ch of word) {
     const s = h('span', 'ch', ch);
@@ -242,14 +223,14 @@ function drawSpark() {
   spark.stroke();
 }
 
-function renderHero(t) {
+function renderHero(t, terrainOn) {
   // Map the cursor onto the surface roughly, so the bump follows it.
   const inHero = mouse.y < hero.getBoundingClientRect().bottom;
   cursorBump.k += ((inHero && mouse.x > -1000 ? SITE.reactivity : 0) - cursorBump.k) * 0.06;
   cursorBump.x = lerp(cursorBump.x, mouse.nx * 1.5, 0.15);
   cursorBump.z = lerp(cursorBump.z, -mouse.ny * 0.9, 0.15);
   const loss = stepOptimizer(t);
-  drawTerrain(t);
+  if (terrainOn) drawTerrain(t);
   if (opt.step % 3 === 0) {
     hudStep.textContent = (opt.step * 8 + 12000).toLocaleString('en-US');
     hudLoss.textContent = loss.toFixed(3) + (opt.losses.length > 10 && loss < opt.losses[opt.losses.length - 10] ? ' ↓' : ' ↑');
@@ -263,6 +244,125 @@ function renderHero(t) {
     s.style.fontVariationSettings = `'wdth' ${(64 + idle * 14 + inf * 22).toFixed(1)}, 'wght' ${(560 + idle * 140 + inf * 200).toFixed(0)}`;
     s.style.color = s.textContent === '.' ? LIME : (inf > 0.35 ? LIME : PAPER);
   }
+}
+
+// ── Hero film ────────────────────────────────────────────────────────────
+// The opening plays the explainer film's choreography live in the page,
+// keyed to one clock T, then rests on the loss landscape.
+const FILM = { Years: 3.5, Domains: 7.5, Converge: 14.5, Close: 18.5, End: 22.5 };
+const FILM_PROMPT = 'what if models could be better?';
+const FILM_FEED = ['run eval suite on ckpt-12', 'cluster model outputs by failure', 'red-team the tool-use agent', 'tune the reward model', 'diff ckpt-11 against ckpt-12', 'shard training across 512 GPUs', 'trace a hallucination to its data', 'profile inference latency', 'build a long-context benchmark', 'regression-test the safety evals'];
+const FILM_DOMAINS = [
+  ['Evaluate', 'Evals that find the edge.'],
+  ['Diagnose', 'Failure modes, found and named.'],
+  ['Improve', 'Post-training that moves the needle.'],
+  ['Scale', 'From one GPU to thousands.'],
+];
+
+const field = hiDPI($('field'));
+const terrainEl = $('terrain'), hudLeft = $('hud-left'), hudRight = $('hud-right');
+const fPrompt = $('f-prompt'), fTyped = $('f-typed'), fCaret = $('f-caret');
+const fYears = $('f-years'), fFeed = $('f-feed'), fCount = $('f-count'), fYearsLabel = $('f-years-label');
+const fDot = $('f-dot'), heroLine = $('hero-line'), heroFoot = $('hero-foot');
+const headLines = Array.from(headline.querySelectorAll('.line'));
+const skipBtn = $('film-skip'), replayBtn = $('film-replay');
+[...FILM_FEED, ...FILM_FEED].forEach((l, i) => fFeed.appendChild(h('div', i % 4 === 1 ? 'hl' : null, '> ' + l)));
+const fDoms = FILM_DOMAINS.map(([title, body], i) => {
+  const box = h('div', 'f-dom');
+  const idx = h('div', 'f-dom-idx', `0${i + 1} / 04`), word = h('div', 'f-dom-word', title);
+  const bar = h('div', 'f-dom-bar'), desc = h('p', 'f-dom-desc', body);
+  box.append(idx, word, bar, desc);
+  $('f-domains').appendChild(box);
+  return { box, idx, word, bar, desc };
+});
+
+let filmStart = performance.now();
+if (reduceMotion) filmStart -= FILM.End * 1000;
+skipBtn.addEventListener('click', () => { filmStart = performance.now() - FILM.End * 1000; });
+replayBtn.addEventListener('click', () => { filmStart = performance.now(); });
+
+function drawField(t, alpha) {
+  const c = field, ctx = c.begin();
+  if (alpha <= 0.01) return;
+  const gap = clamp(c.w / 25, 40, 76), drift = (t * 6) % gap;
+  for (let yi = 0, y = gap / 2 - drift; y < c.h + gap; yi++, y += gap) {
+    for (let xi = 0, x = gap / 2; x < c.w; xi++, x += gap) {
+      const ph = Math.sin(xi * 0.5 + t * 0.9) * Math.cos(yi * 0.6 - t * 0.7);
+      const inf = Math.max(0, 1 - Math.hypot(x - mouse.x, y - mouse.y) / 240) * SITE.reactivity;
+      const s = 3 + inf * 5;
+      ctx.fillStyle = inf > 0.05 ? `rgba(200,255,62,${(0.2 + inf * 0.8) * alpha})` : `rgba(242,241,236,${(0.06 + Math.max(0, ph) * 0.12) * alpha})`;
+      ctx.fillRect(x - s / 2, y - s / 2, s, s);
+    }
+  }
+}
+
+function renderFilm(now, W, H) {
+  const T = Math.min((now - filmStart) / 1000, FILM.End);
+  const { Years: Y, Domains: D, Converge: C, Close: K, End: E } = FILM;
+  const done = T >= E;
+  hero.classList.toggle('resting', done);
+  skipBtn.hidden = done; replayBtn.hidden = !done;
+
+  drawField(T, 1 - 0.65 * MOTION.enter(T, K + 1, K + 3));
+
+  // Prompt: types, then docks top-left.
+  const n = Math.floor(clamp(MOTION.enter(T, 0.5, 2.6, 0, FILM_PROMPT.length), 0, FILM_PROMPT.length));
+  if (fTyped.textContent.length !== n) fTyped.textContent = FILM_PROMPT.slice(0, n);
+  fCaret.style.opacity = (Math.floor(T * 2.4) % 2 === 0 || (T > 0.5 && T < 2.6)) ? 1 : 0;
+  const move = MOTION.draw(T, Y - 0.2, Y + 0.6);
+  const gutter = clamp(W * 0.04, 20, 48);
+  fPrompt.style.transform = `translate(${W / 2 + (gutter - W / 2) * move}px, ${H / 2 + (Math.min(110, H * 0.14) - H / 2) * move}px) translate(${-50 * (1 - move)}%, -50%) scale(${1 - 0.5 * move})`;
+  fPrompt.style.opacity = MOTION.enter(T, 0.1, 0.5) * (1 - MOTION.enter(T, D - 0.3, D + 0.2));
+
+  // Years: counter runs to 3.0 over streaming prompts.
+  fYears.style.opacity = MOTION.enter(T, Y + 0.2, Y + 0.8) * (1 - MOTION.enter(T, D - 0.4, D + 0.1));
+  if (T > Y - 0.5 && T < D + 0.5) {
+    fFeed.style.transform = `translateY(${H * 0.8 - (T - Y) * H * 0.14}px)`;
+    fCount.textContent = MOTION.draw(T, Y + 0.4, Y + 2.6, 0, 3).toFixed(1);
+    fCount.style.fontVariationSettings = `'wdth' ${MOTION.draw(T, Y + 0.4, Y + 2.8, 62, 125)}`;
+    fYearsLabel.style.opacity = MOTION.enter(T, Y + 1.4, Y + 2);
+  }
+
+  // Services slam in, stack, collapse into one dot.
+  const step = (C - D) / 4;
+  const collapse = MOTION.draw(T, C + 0.8, C + 2.4);
+  const stack = MOTION.draw(T, C - 0.2, C + 0.7);
+  const fadeOut = 1 - MOTION.enter(T, C + 2.2, C + 2.6);
+  const base = clamp(W * 0.13, 52, 200);
+  fDoms.forEach((d, i) => {
+    const s = D + i * step;
+    const inn = MOTION.pop(T, s, s + 0.5);
+    const wd = MOTION.enter(T, s, s + 1.2, 62, 110);
+    const outUp = i < 3 ? MOTION.enter(T, s + step - 0.25, s + step + 0.25) : 0;
+    const soloY = H / 2 + (1 - inn) * H * 0.18 - outUp * H * 0.24;
+    const stackY = H * (0.27 + i * 0.157);
+    const y = stack > 0 ? stackY * stack + (i === 3 ? soloY : H / 2) * (1 - stack) : soloY;
+    const op = T < C - 0.2 ? clamp(inn * 3, 0, 1) * (1 - outUp) : (i === 3 ? 1 : MOTION.enter(T, C + 0.2, C + 0.7));
+    const cy = y + (H / 2 - y) * collapse;
+    d.box.style.transform = `translate(-50%, calc(-50% + ${cy - H / 2}px)) scale(${1 - collapse * 0.96})`;
+    d.box.style.opacity = op * fadeOut;
+    d.idx.style.opacity = 1 - stack; d.idx.style.maxHeight = (1 - stack) * 60 + 'px';
+    d.word.style.fontSize = base * (1 - 0.6 * stack) + 'px';
+    d.word.style.fontVariationSettings = `'wdth' ${stack ? 100 : wd}`;
+    d.bar.style.width = W * 0.7 * MOTION.draw(T, s + 0.15, s + 0.9) * (1 - stack) + 'px';
+    d.bar.style.opacity = 1 - stack;
+    d.desc.style.opacity = MOTION.enter(T, s + 0.4, s + 0.9) * (1 - stack); d.desc.style.maxHeight = (1 - stack) * 120 + 'px';
+  });
+  fDot.style.transform = `scale(${MOTION.pop(T, C + 2.1, C + 2.7) * (1 - MOTION.draw(T, K, K + 0.5))})`;
+
+  // Close: the dot becomes a line; the headline lands; the landscape wakes.
+  heroLine.style.width = MOTION.draw(T, K, K + 0.8) * 100 + '%';
+  headLines.forEach((l, i) => {
+    const s = K + 0.5 + i * 0.35, k = MOTION.pop(T, s, s + 0.6);
+    l.style.opacity = clamp(k * 2, 0, 1);
+    l.style.transform = `translateY(${(1 - k) * 90}px)`;
+  });
+  heroFoot.style.opacity = MOTION.enter(T, K + 1.8, K + 2.4);
+  const land = MOTION.enter(T, K + 1.2, K + 3.2);
+  terrainEl.style.opacity = land;
+  const hud = MOTION.enter(T, K + 2.4, K + 3.2);
+  hudLeft.style.opacity = hud; hudRight.style.opacity = hud;
+  return land > 0.01;
 }
 
 // ── Ticker ───────────────────────────────────────────────────────────────
@@ -589,7 +689,7 @@ function frame(now) {
   const W = window.innerWidth, H = window.innerHeight;
   mouse.x += (mouse.tx - mouse.x) * 0.12; mouse.y += (mouse.ty - mouse.y) * 0.12;
   if (mouse.tx > -1000) { mouse.nx = clamp(mouse.x / W * 2 - 1, -1, 1); mouse.ny = clamp(mouse.y / H * 2 - 1, -1, 1); }
-  if (near(hero, H)) renderHero(t);
+  if (near(hero, H)) renderHero(t, renderFilm(now, W, H));
   if (near(sAttn, H)) renderAttention(t, sceneProgress(sAttn, H));
   if (near(sPipe, H)) renderPipeline(t, sceneProgress(sPipe, H));
   if (near(sClose, H)) renderClose(H);
