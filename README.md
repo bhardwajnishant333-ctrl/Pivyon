@@ -2,7 +2,7 @@
 
 Exploring the frontiers of artificial intelligence through advanced AI experimentation, intelligent systems architecture, autonomous agents, multimodal AI, automation, and next-generation applications. Focused on transforming ambitious ideas into groundbreaking technologies.
 
-A dark, kinetic one-page portfolio and a 23.5-second explainer video. Plain HTML, CSS and JavaScript — no build step, no dependencies.
+A dark, kinetic site for frontier-AI services — live loss landscape, attention arcs and a four-stage services pipeline, all rendered in real time — plus a 23.5-second explainer video. Plain HTML, CSS and JavaScript — no build step, no dependencies.
 
 - `index.html`, `styles.css`, `main.js` — the portfolio site
 - `explainer/` — the explainer video (1920×1080, looping, with a playback bar)
