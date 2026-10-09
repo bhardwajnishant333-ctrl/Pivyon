@@ -5,7 +5,7 @@
 <link rel="icon" type="image/svg+xml" href="brand/pivyon-mark-on-ink.svg">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Pivyon — We make frontier models better</title>
-<meta name="description" content="Evaluation, failure analysis, post-training and scale for teams building frontier AI.">
+<meta name="description" content="Frontier evals, red-teaming, post-training data and RL environments — for teams building frontier AI.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -16,9 +16,9 @@
 <header class="nav mono">
   <a href="#top" class="brand"><svg class="brand-mark" viewBox="0 0 100 100" aria-hidden="true"><rect x="22" y="19" width="15" height="62" fill="#fff"/><circle cx="59" cy="39" r="20" fill="#c8ff3e"/></svg><span data-name>Pivyon</span></a>
   <nav>
-    <a href="#attention">Approach</a>
     <a href="#services">Services</a>
-    <a href="#film">Film</a>
+    <a href="#findings">Findings</a>
+    <a href="#engage">Engage</a>
     <a href="#contact">Contact</a>
   </nav>
 </header>
@@ -56,10 +56,10 @@
     <h1 id="headline" aria-label="We make frontier models better."></h1>
     <div class="hero-line-track"><div id="hero-line" class="hero-line"></div></div>
     <div id="hero-foot" class="hero-foot">
-      <p>We help teams building frontier AI evaluate, diagnose, improve and scale their models.</p>
+      <p>Frontier evals, red-teaming, post-training data and RL environments — for the teams building the most capable AI.</p>
       <div class="hero-ctas mono">
         <a href="#services" class="btn-ghost">See what we do ↓</a>
-        <a href="#contact" class="btn-lime">Start a project →</a>
+        <a href="#engage" class="btn-lime">Book a teardown →</a>
       </div>
     </div>
   </div>
@@ -72,13 +72,25 @@
 
 <div class="ticker" aria-hidden="true"><div id="ticker-row"></div></div>
 
+<!-- Why Pivyon · the edge -->
+<section id="edge" class="edge wrap">
+  <div class="eyebrow mono">01 — Why Pivyon</div>
+  <h2 class="edge-head">We've spent more hours inside frontier models than 99.5% of the people who use them. <span class="lime">That's the edge.</span></h2>
+  <div class="edge-stats">
+    <div class="edge-stat"><div class="edge-n"><span data-count="0.5" data-dec="1">0.0</span><span class="lime">%</span></div><p class="mono">Top tier of ChatGPT users — by ChatGPT's own ranking</p></div>
+    <div class="edge-stat"><div class="edge-n"><span data-count="3" data-dec="0">0</span><span class="lime"> yrs</span></div><p class="mono">Daily, adversarial use across frontier models</p></div>
+    <div class="edge-stat"><div class="edge-n"><span data-count="4" data-dec="0">0</span></div><p class="mono">Ways we make models better: evals, red-teaming, data, environments</p></div>
+  </div>
+  <p class="edge-sub">Benchmarks tell you how a model scores. We tell you how it <em>behaves</em> — where it breaks, why, and what data fixes it.</p>
+</section>
+
 <!-- Approach · attention arcs across a sentence, swept by scroll -->
 <section id="attention" class="scene s-attn">
   <div class="stick">
     <div class="attn-copy">
-      <div class="eyebrow mono">01 — Approach</div>
-      <h2>I look <em>inside</em> the model.</h2>
-      <p>Before I change anything, I measure it. Attention, activations, outputs at scale — so every improvement is aimed, not guessed.</p>
+      <div class="eyebrow mono">02 — Approach</div>
+      <h2>We look <em>inside</em> the model.</h2>
+      <p>Before we change anything, we measure it. Attention, outputs, failure clusters, judge agreement — so every fix is aimed, not guessed.</p>
     </div>
     <div class="attn-meta mono"><span id="attn-head">layer 23 · head 4</span><span id="attn-q" class="lime"></span></div>
     <canvas id="attn"></canvas>
@@ -89,36 +101,36 @@
 <section id="services" class="scene s-pipe">
   <div class="stick">
     <div class="pipe-head mono">
-      <span class="lime">02 — Services</span>
+      <span class="lime">03 — Services</span>
       <div class="pipe-steps" id="pipe-steps">
-        <span>Evaluate</span><span>Diagnose</span><span>Improve</span><span>Scale</span>
+        <span>Evals</span><span>Red-teaming</span><span>Post-training data</span><span>RL environments</span>
       </div>
     </div>
     <div class="pipe-body">
       <div class="pipe-copy" id="pipe-copy">
         <article>
-          <div class="pipe-n mono">01 / 04</div>
-          <h3>Evaluate</h3>
-          <p>Evals that find the edge. Custom benchmarks, adversarial suites and capability maps that show exactly where a model stands — checkpoint by checkpoint.</p>
-          <ul class="mono"><li>Capability mapping</li><li>Custom benchmarks</li><li>Red-teaming</li></ul>
+          <div class="pipe-n mono">01 / 04 · Frontier evals</div>
+          <h3>Evals that predict production.</h3>
+          <p>Custom benchmarks built from your real use cases — not leaderboard trivia. Capability elicitation, LLM-as-judge calibrated against expert humans, contamination checks, and a harness you keep.</p>
+          <ul class="mono"><li>Capability maps per checkpoint</li><li>Rubrics &amp; judge calibration</li><li>Contamination &amp; regression checks</li></ul>
         </article>
         <article>
-          <div class="pipe-n mono">02 / 04</div>
-          <h3>Diagnose</h3>
-          <p>Failure analysis at scale. I cluster model outputs to surface the failure modes that matter — hallucination, refusal drift, tool misuse — before your users do.</p>
-          <ul class="mono"><li>Output clustering</li><li>Root-cause analysis</li><li>Regression tracking</li></ul>
+          <div class="pipe-n mono">02 / 04 · Red-teaming</div>
+          <h3>We break it before your users do.</h3>
+          <p>Adversarial testing by people who live inside these models. Jailbreak discovery, prompt-injection audits for agents, refusal calibration and reward-hacking hunts — every finding reproducible.</p>
+          <ul class="mono"><li>Jailbreak &amp; policy bypass</li><li>Prompt injection · tool abuse</li><li>Over- &amp; under-refusal</li></ul>
         </article>
         <article>
-          <div class="pipe-n mono">03 / 04</div>
-          <h3>Improve</h3>
-          <p>Post-training that moves the needle. Data curation, fine-tuning and preference optimisation, measured against the evals that matter to you.</p>
-          <ul class="mono"><li>Data curation</li><li>Fine-tuning · RLHF · DPO</li><li>Eval-driven iteration</li></ul>
+          <div class="pipe-n mono">03 / 04 · Post-training data</div>
+          <h3>Data that moves the loss curve.</h3>
+          <p>Expert-written SFT demonstrations, preference pairs for RLHF and DPO, and reasoning traces — designed against the failures we found, and measured on the evals that matter.</p>
+          <ul class="mono"><li>SFT demonstrations</li><li>RLHF · DPO preference pairs</li><li>Reasoning traces &amp; rubrics</li></ul>
         </article>
         <article>
-          <div class="pipe-n mono">04 / 04</div>
-          <h3>Scale</h3>
-          <p>From prototype to production. Training and inference pipelines engineered to hold up from a single GPU to thousands.</p>
-          <ul class="mono"><li>Distributed training</li><li>Inference optimisation</li><li>Cost &amp; throughput tuning</li></ul>
+          <div class="pipe-n mono">04 / 04 · RL environments</div>
+          <h3>Worlds for agents to learn in.</h3>
+          <p>Verifiable tasks with graders that can't be gamed — tool-use, browser and workflow sandboxes where agents roll out, fail, and get better. Built for long-horizon reliability.</p>
+          <ul class="mono"><li>Verifiable tasks &amp; graders</li><li>Tool-use &amp; computer-use sandboxes</li><li>Long-horizon trajectories</li></ul>
         </article>
       </div>
       <div class="pipe-vis"><canvas id="pipe"></canvas></div>
@@ -126,26 +138,74 @@
   </div>
 </section>
 
+<!-- Field notes · an animated log of the kind of failures we surface -->
+<section id="findings" class="findings wrap">
+  <div class="findings-head">
+    <div>
+      <div class="eyebrow mono">04 — Field notes</div>
+      <h2>What we find.</h2>
+    </div>
+    <p>The failure modes we hunt, shown as illustrative examples — the kind of thing a 72-hour teardown surfaces, each with its fix.</p>
+  </div>
+  <div class="term">
+    <div class="term-bar mono"><span class="term-dots"><i></i><i></i><i></i></span><span>pivyon://teardown/findings.log</span><span class="lime" id="term-count">0 findings</span></div>
+    <div class="term-body" id="term"></div>
+  </div>
+</section>
+
+<!-- Engagements · productised offers -->
+<section id="engage" class="engage wrap">
+  <div class="eyebrow mono">05 — Engagements</div>
+  <h2 class="engage-head">Start with a teardown.<br><span class="grey">Stay for the data.</span></h2>
+  <div class="offers">
+    <article class="offer offer-hot">
+      <div class="offer-top mono"><span>01</span><span class="lime">72 hours</span></div>
+      <h3>The Teardown</h3>
+      <p>We attack your model or agent for 72 hours straight. You get a ranked failure report, reproducible prompts and a fix for each.</p>
+      <ul class="mono"><li>Severity-ranked findings</li><li>Repro prompts &amp; transcripts</li><li>Fix &amp; data recommendations</li></ul>
+      <a class="offer-cta mono" href="mailto:hello@pivyon.com?subject=Teardown%20enquiry">Book a teardown →</a>
+    </article>
+    <article class="offer">
+      <div class="offer-top mono"><span>02</span><span class="lime">2 weeks</span></div>
+      <h3>Eval Sprint</h3>
+      <p>A custom eval suite for your product, a harness you keep, and baselines across the frontier models you're choosing between.</p>
+      <ul class="mono"><li>Custom eval suite</li><li>Calibrated LLM judges</li><li>Model-vs-model baselines</li></ul>
+      <a class="offer-cta mono" href="mailto:hello@pivyon.com?subject=Eval%20Sprint%20enquiry">Plan a sprint →</a>
+    </article>
+    <article class="offer">
+      <div class="offer-top mono"><span>03</span><span class="lime">Ongoing</span></div>
+      <h3>Frontier Embed</h3>
+      <p>Your embedded red-team and data partner, release after release — preference data, reasoning traces and RL environments on demand.</p>
+      <ul class="mono"><li>Red-team every release</li><li>Post-training data on tap</li><li>RL environments &amp; graders</li></ul>
+      <a class="offer-cta mono" href="mailto:hello@pivyon.com?subject=Frontier%20Embed%20enquiry">Talk to us →</a>
+    </article>
+  </div>
+  <div class="for mono"><span class="grey">Built for</span><span>Frontier labs</span><span>AI-native startups</span><span>Teams shipping agents</span><span>Enterprises deploying LLMs</span></div>
+</section>
+
 <!-- Close · the line draws; Make things better lands -->
 <section class="s-close">
   <div id="close-words" class="close-words"></div>
   <div class="close-line-track"><div id="close-line" class="close-line"></div></div>
-  <div id="close-foot" class="close-foot mono"><span data-name class="paper">Pivyon</span><span class="grey">Frontier AI · evaluation · scale</span></div>
+  <div id="close-foot" class="close-foot mono"><span data-name class="paper">Pivyon</span><span class="grey">Evals · Red-teaming · Data · Environments</span></div>
 </section>
 
 <section id="about" class="about wrap">
   <div class="about-side">
-    <div class="eyebrow mono">03 — About</div>
+    <div class="eyebrow mono">06 — Founder</div>
     <div class="stats mono">
-      <span class="stat">3</span><span>years inside<br>advanced AI systems</span>
-      <span class="stat">0.5<span class="lime">%</span></span><span>estimated<br>engagement tier</span>
+      <span class="stat">3</span><span>years inside<br>frontier AI systems</span>
+      <span class="stat">0.5<span class="lime">%</span></span><span>top tier of<br>ChatGPT users</span>
     </div>
   </div>
-  <p id="bio" class="bio"></p>
+  <div class="founder">
+    <p id="bio" class="bio"></p>
+    <div class="founder-sig mono">— Founder, <span data-name>Pivyon</span></div>
+  </div>
 </section>
 
 <section id="film" class="film wrap">
-  <div class="eyebrow mono">04 — Film</div>
+  <div class="eyebrow mono">07 — Film</div>
   <a href="explainer/" class="film-card">
     <span class="film-tag mono">Explainer · 24s</span>
     <span class="film-cta"><span class="film-play">▶</span>Watch</span>
@@ -154,11 +214,12 @@
 
 <section id="contact" class="contact">
   <div class="contact-inner">
-    <div class="eyebrow mono">05 — Contact</div>
+    <div class="eyebrow mono">08 — Contact</div>
+    <h2 class="contact-head">Tell us what your model should never do.<br><span class="grey">We'll find out if it does.</span></h2>
     <form id="contact-form" class="contact-form" novalidate>
       <div class="contact-line">
         <span class="lime">&gt;</span>
-        <input id="msg" name="message" autocomplete="off" placeholder="say something" aria-label="Your message">
+        <input id="msg" name="message" autocomplete="off" placeholder="describe your model" aria-label="Your message">
         <button type="submit" aria-label="Send">→</button>
       </div>
       <div class="contact-hint mono"><span id="hint">A short note is enough</span><span>Enter to send</span></div>

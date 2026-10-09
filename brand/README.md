@@ -28,9 +28,9 @@ Keep clear space around the mark of at least the dot's radius. Don't recolour th
 
 ## Bio
 **X (160 characters max):**
-> We make frontier models better. Evaluation · failure analysis · post-training · scale for teams building frontier AI. hello@pivyon.com
+> We make frontier models better. Evals · red-teaming · post-training data · RL environments. Book a 72-hour teardown → hello@pivyon.com
 
 **Short (LinkedIn tagline, ~120):**
-> We make frontier models better — evaluation, failure analysis, post-training and scale.
+> We make frontier models better — frontier evals, red-teaming, post-training data and RL environments.
 
 **Website field:** `pivyon.com` · **Location:** your city, or `Frontier`

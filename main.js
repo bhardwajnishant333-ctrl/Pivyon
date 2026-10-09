@@ -8,13 +8,27 @@ const SITE = {
   reactivity: 1, // 0–2: how strongly the hero reacts to the cursor
 };
 
-const BIO = "For three years, I've extensively explored ChatGPT and advanced AI systems, with my engagement informally estimated among the top 0.5% of AI users. I've developed multiple innovative projects across AI research, intelligent automation, interactive technologies, and next-generation applications. I now aim to move and make things better in the AI and upcoming future technologies.";
+const BIO = "For three years I've pushed ChatGPT and frontier AI systems harder than almost anyone — ChatGPT ranks me in its top 0.5% of users. Along the way I've built projects across AI research, intelligent automation, interactive technologies and next-generation applications. Pivyon turns that into a service: finding exactly where frontier models break, and building the evals, data and environments that make them better.";
 
-const TICKER = ['Evaluation', 'Red-teaming', 'Failure analysis', 'Post-training', 'RLHF · DPO', 'Interpretability', 'Distributed training', 'Inference at scale'];
+const TICKER = ['Frontier evals', 'Red-teaming', 'Jailbreak discovery', 'Prompt-injection audits', 'RLHF · DPO data', 'Reasoning traces', 'RL environments', 'Reward-hacking hunts', 'LLM-as-judge calibration', 'Agent reliability'];
 
 const ATTN_TOKENS = ['frontier', 'models', 'learn', 'what', 'matters', 'by', 'attending', 'to', 'every', 'token', 'at', 'once'];
 
-const EVAL_ROWS = ['reasoning', 'code', 'math', 'tool use', 'long context', 'safety', 'multilingual', 'agentic'];
+const EVAL_ROWS = ['reasoning', 'code', 'math', 'tool use', 'long context', 'refusals', 'injection', 'agentic'];
+
+// Illustrative findings for the field-notes terminal.
+const FINDINGS = [
+  ['JAILBREAK', 'high', 'Role-play framing bypasses the refusal policy in three turns', 'adversarial SFT pairs + refusal-consistency eval'],
+  ['INJECTION', 'crit', 'Agent follows instructions hidden inside a tool’s output', 'tool-output isolation + injection test suite'],
+  ['REWARD', 'high', 'Judge model prefers confident wrong answers to hedged right ones', 'recalibrate judge against expert labels'],
+  ['EVAL', 'med', 'Benchmark items found in training data — scores inflated', 'contamination check + held-out rewrite'],
+  ['AGENT', 'high', 'Loops on a failed API call and burns tokens for 40 steps', 'RL environment with step-budget grader'],
+  ['REFUSAL', 'med', 'Over-refuses benign medical questions after safety tuning', 'borderline-prompt preference pairs'],
+  ['LONG-CTX', 'med', 'Drops an instruction placed 60% deep in a long context', 'needle-in-workflow eval + targeted SFT'],
+  ['REASONING', 'low', 'Right answer, unfaithful chain of thought', 'process-graded reasoning traces'],
+  ['SYCOPHANCY', 'high', 'Reverses a correct answer when the user pushes back', 'pushback preference data + consistency eval'],
+  ['TOOL USE', 'med', 'Hallucinates a function argument the schema doesn’t allow', 'schema-strict grader in the environment'],
+];
 
 const LIME = '#c8ff3e', PAPER = '#f2f1ec', INK = '#0b0b0d', GREY = '#8d8c86', HOT = '#ff5a3c';
 const MONO = "'JetBrains Mono', monospace";
@@ -253,10 +267,10 @@ const FILM = { Years: 3.5, Domains: 7.5, Converge: 14.5, Close: 18.5, End: 22.5 
 const FILM_PROMPT = 'what if models could be better?';
 const FILM_FEED = ['run eval suite on ckpt-12', 'cluster model outputs by failure', 'red-team the tool-use agent', 'tune the reward model', 'diff ckpt-11 against ckpt-12', 'shard training across 512 GPUs', 'trace a hallucination to its data', 'profile inference latency', 'build a long-context benchmark', 'regression-test the safety evals'];
 const FILM_DOMAINS = [
-  ['Evaluate', 'Evals that find the edge.'],
-  ['Diagnose', 'Failure modes, found and named.'],
-  ['Improve', 'Post-training that moves the needle.'],
-  ['Scale', 'From one GPU to thousands.'],
+  ['Evaluate', 'Frontier evals that predict production.'],
+  ['Break', 'Red-teaming before your users do.'],
+  ['Post-train', 'Data that moves the loss curve.'],
+  ['Simulate', 'RL environments for agents to learn in.'],
 ];
 
 const field = hiDPI($('field'));
@@ -496,7 +510,7 @@ const cloud = (() => {
   }
   return { pts, centers };
 })();
-const FAILURES = ['', 'hallucination', 'refusal drift', 'tool misuse'];
+const FAILURES = ['', 'jailbreak', 'prompt injection', 'reward hacking'];
 
 const curves = (() => {
   const r = rng(7), N = 160, before = [], after = [];
@@ -605,33 +619,43 @@ function drawImprove(ctx, W, H, lp) {
   ctx.fillStyle = LIME; ctx.fillText('——— AFTER', left + 110, top + 18);
 }
 
-function drawScale(ctx, W, H, lp, t) {
-  const N = 64, top = 50, bottom = 70;
-  const size = Math.min((W - 36) / N, (H - top - bottom) / N);
-  const ox = (W - size * N) / 2, oy = top;
-  const lit = Math.round(Math.pow(2, clamp(lp * 1.25, 0, 1) * 12));
+function drawRollouts(ctx, W, H, lp, t) {
+  // Each cell is one episode in an RL environment. The policy improves as
+  // training proceeds, so later episodes pass more often.
+  const top = 50, bottom = 92;
+  const cols = W < 500 ? 24 : 40, rows = Math.max(8, Math.floor((H - top - bottom) / ((W - 36) / cols)));
+  const size = Math.min((W - 36) / cols, (H - top - bottom) / rows);
+  const ox = (W - size * cols) / 2;
+  const total = cols * rows, shown = Math.floor(clamp(lp * 1.3, 0, 1) * total);
+  const passProb = (i) => 0.18 + 0.66 * Math.pow(i / total, 0.8);
+  let passed = 0, recent = 0, recentN = 0;
   ctx.font = `500 11px ${MONO}`;
   ctx.fillStyle = GREY;
-  ctx.fillText('ACCELERATOR GRID · 4,096', 18, 30);
-  for (let i = 0; i < N * N; i++) {
-    const x = ox + (i % N) * size, y = oy + Math.floor(i / N) * size;
-    if (i < lit) {
-      const fl = 0.55 + 0.45 * Math.sin(t * 6 + hash(i, 5, 9) * 6.28);
-      ctx.fillStyle = `rgba(200,255,62,${fl})`;
-    } else ctx.fillStyle = 'rgba(242,241,236,0.06)';
-    ctx.fillRect(x, y, Math.max(1, size - 1), Math.max(1, size - 1));
+  ctx.fillText('RL ENVIRONMENT · ROLLOUTS', 18, 30);
+  for (let i = 0; i < total; i++) {
+    const x = ox + (i % cols) * size, y = top + Math.floor(i / cols) * size;
+    if (i >= shown) { ctx.fillStyle = 'rgba(242,241,236,0.05)'; ctx.fillRect(x, y, size - 2, size - 2); continue; }
+    const pass = hash(i, 7, 1) < passProb(i);
+    if (pass) passed++;
+    if (i >= shown - cols * 3) { recentN++; if (pass) recent++; }
+    const fresh = i > shown - cols ? 0.5 + 0.5 * Math.sin(t * 8 + i) : 1;
+    ctx.fillStyle = pass ? `rgba(200,255,62,${0.85 * fresh})` : `rgba(255,90,60,${0.55 * fresh})`;
+    ctx.fillRect(x, y, size - 2, size - 2);
   }
+  const rate = recentN ? recent / recentN : 0;
   ctx.fillStyle = PAPER;
   ctx.font = `800 ${clamp(W * 0.05, 22, 40)}px 'Archivo'`;
-  ctx.fillText(`${lit.toLocaleString('en-US')} GPUs`, 18, H - 22);
+  ctx.fillText(`pass@1 ${(rate * 100).toFixed(0)}%`, 18, H - 30);
   ctx.font = `500 11px ${MONO}`;
-  ctx.fillStyle = LIME;
   ctx.textAlign = 'right';
-  ctx.fillText(`${(lit * 3.1).toFixed(0)}k tok/s`, W - 18, H - 24);
+  ctx.fillStyle = GREY;
+  ctx.fillText(`${shown.toLocaleString('en-US')} episodes`, W - 18, H - 46);
+  ctx.fillStyle = LIME;
+  ctx.fillText(`${passed.toLocaleString('en-US')} passed · ${(shown - passed).toLocaleString('en-US')} failed`, W - 18, H - 28);
   ctx.textAlign = 'left';
 }
 
-const DRAWERS = [drawEvaluate, drawDiagnose, drawImprove, drawScale];
+const DRAWERS = [drawEvaluate, drawDiagnose, drawImprove, drawRollouts];
 
 function renderPipeline(t, p) {
   const u = clamp(p, 0, 0.9999) * 4;
@@ -682,6 +706,42 @@ function renderBio(H) {
   });
 }
 
+// ── Why Pivyon: numbers count up as they enter view ───────────────────────
+const counters = Array.from(document.querySelectorAll('[data-count]')).map((el) => ({ el, to: +el.dataset.count, dec: +el.dataset.dec, start: null }));
+function renderCounters(now, H) {
+  for (const c of counters) {
+    if (c.start === null) {
+      const r = c.el.getBoundingClientRect();
+      if (r.top < H * 0.9 && r.bottom > 0) c.start = now;
+      else continue;
+    }
+    const v = MOTION.draw(reduceMotion ? 1 : (now - c.start) / 1600, 0, 1, 0, c.to);
+    const txt = v.toFixed(c.dec);
+    if (c.el.textContent !== txt) c.el.textContent = txt;
+  }
+}
+
+// ── Field notes: findings stream in while the terminal is on screen ───────
+const term = $('term'), termCount = $('term-count');
+const termState = { next: 0, last: 0, count: 0 };
+const termCaret = h('span', 'term-caret');
+term.appendChild(termCaret);
+function addFinding() {
+  const [tag, sev, what, fix] = FINDINGS[termState.next % FINDINGS.length];
+  termState.next++; termState.count++;
+  const row = h('div', 'f-row');
+  row.append(h('span', 'tag', `[${tag}]`), h('span', `sev ${sev}`, `sev:${sev.toUpperCase()}`), h('span', 'what', what));
+  const f = h('span', 'fix'); f.append(h('b', null, '→ fix: '), document.createTextNode(fix)); row.appendChild(f);
+  term.insertBefore(row, termCaret);
+  while (term.children.length > 9) term.removeChild(term.firstChild);
+  termCount.textContent = `${termState.count} findings`;
+}
+function renderTerm(now, H) {
+  const r = term.getBoundingClientRect();
+  if (r.top > H || r.bottom < 0) return;
+  if (now - termState.last > (termState.count < 4 ? 650 : 2200)) { termState.last = now; addFinding(); }
+}
+
 // ── Frame loop ───────────────────────────────────────────────────────────
 const t0 = performance.now();
 function frame(now) {
@@ -694,6 +754,8 @@ function frame(now) {
   if (near(sPipe, H)) renderPipeline(t, sceneProgress(sPipe, H));
   if (near(sClose, H)) renderClose(H);
   renderBio(H);
+  renderCounters(now, H);
+  renderTerm(now, H);
   requestAnimationFrame(frame);
 }
 requestAnimationFrame(frame);
@@ -708,7 +770,7 @@ form.addEventListener('submit', (e) => {
   e.preventDefault();
   const msg = input.value.trim();
   if (msg.length < 3) { setErr(true); return; }
-  window.location.href = `mailto:${SITE.email}?subject=${encodeURIComponent('Hello from pivyon.com')}&body=${encodeURIComponent(msg)}`;
+  window.location.href = `mailto:${SITE.email}?subject=${encodeURIComponent('Pivyon enquiry')}&body=${encodeURIComponent(msg)}`;
   form.hidden = true;
   $('sent').hidden = false;
 });
