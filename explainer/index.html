@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Explainer Video</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; height: 100%; background: #0b0b0d; }
+  #stage { position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; background: #0a0a0a; font-family: Inter, system-ui, sans-serif; }
+  #area { flex: 1; width: 100%; min-height: 0; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+  #canvas { position: relative; flex-shrink: 0; overflow: hidden; transform-origin: center; box-shadow: 0 20px 60px rgba(0,0,0,0.4); }
+  #bar { display: flex; align-items: center; gap: 10px; padding: 6px 12px; box-sizing: border-box; width: 100%; max-width: 680px; flex-shrink: 0;
+         background: rgba(20,20,20,0.92); border-top: 1px solid rgba(255,255,255,0.08); border-radius: 6px; color: #f6f4ef; user-select: none; }
+  #bar button { display: flex; align-items: center; justify-content: center; width: 28px; height: 28px; padding: 0; border: 0; border-radius: 4px;
+                background: transparent; color: #f6f4ef; cursor: pointer; }
+  #bar button:hover { background: rgba(255,255,255,0.08); }
+  #play .pause, #play.playing .tri { display: none; }
+  #play.playing .pause { display: block; }
+  .time { font: 12px 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace; font-variant-numeric: tabular-nums; width: 64px; }
+  #cur { text-align: right; }
+  #dur { color: rgba(246,244,239,0.55); }
+  #track { flex: 1; height: 22px; position: relative; cursor: pointer; display: flex; align-items: center; touch-action: none; }
+  #track .rail, #fill { position: absolute; left: 0; height: 4px; border-radius: 2px; }
+  #track .rail { right: 0; background: rgba(255,255,255,0.12); }
+  #fill { background: oklch(72% 0.12 250); }
+  #knob { position: absolute; top: 50%; width: 12px; height: 12px; margin: -6px 0 0 -6px; background: #fff; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.4); }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="area"><div id="canvas"></div></div>
+  <div id="bar">
+    <button id="play" title="Play/pause (space)" aria-label="Play/pause">
+      <svg class="tri" width="14" height="14" viewBox="0 0 14 14"><path d="M3 2l9 5-9 5V2z" fill="currentColor"/></svg>
+      <svg class="pause" width="14" height="14" viewBox="0 0 14 14"><rect x="3" y="2" width="3" height="10" fill="currentColor"/><rect x="8" y="2" width="3" height="10" fill="currentColor"/></svg>
+    </button>
+    <button id="reset" title="Return to start (0)" aria-label="Return to start">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 2v10M12 2L5 7l7 5V2z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/></svg>
+    </button>
+    <div id="cur" class="time">0:00.00</div>
+    <div id="track"><div class="rail"></div><div id="fill"></div><div id="knob"></div></div>
+    <div id="dur" class="time"></div>
+  </div>
+</div>
+<script src="explainer.js"></script>
+</body>
+</html>

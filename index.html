@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Make Things Better</title>
+<meta name="description" content="Building at the edge of AI and the technologies coming next.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="nav mono">
+  <a href="#top" class="brand"><span class="brand-mark"></span><span data-name>Your Name</span></a>
+  <nav>
+    <a href="#about">About</a>
+    <a href="#work">Work</a>
+    <a href="#film">Film</a>
+    <a href="#contact">Contact</a>
+  </nav>
+</header>
+
+<section id="top" class="hero">
+  <canvas id="field"></canvas>
+  <div class="hero-meta mono">
+    <span>AI research · Automation · Interactive tech</span>
+    <span class="lime">● Open to collaborations</span>
+  </div>
+  <h1 id="headline" aria-label="Make things better."></h1>
+  <div class="hero-foot">
+    <p>Building at the edge of AI and the technologies coming next.</p>
+    <a href="#about" class="mono muted-link">Scroll ↓</a>
+  </div>
+</section>
+
+<div class="ticker" aria-hidden="true"><div id="ticker-row"></div></div>
+
+<section id="about" class="about wrap">
+  <div class="about-side">
+    <div class="eyebrow mono">01 — About</div>
+    <div class="stats mono">
+      <span class="stat">3</span><span>years inside<br>advanced AI systems</span>
+      <span class="stat">0.5<span class="lime">%</span></span><span>estimated<br>engagement tier</span>
+    </div>
+  </div>
+  <p id="bio" class="bio"></p>
+</section>
+
+<section id="work" class="work wrap">
+  <div class="section-head mono"><span class="lime">02 — Work</span><span class="grey">Hover to open</span></div>
+  <div id="domains" class="domains"></div>
+</section>
+
+<section id="film" class="film wrap">
+  <div class="eyebrow mono">03 — Film</div>
+  <a href="explainer/" class="film-card">
+    <span class="film-tag mono">Explainer · 24s</span>
+    <span class="film-cta"><span class="film-play">▶</span>Watch</span>
+  </a>
+</section>
+
+<section id="contact" class="contact">
+  <div class="contact-inner">
+    <div class="eyebrow mono">04 — Contact</div>
+    <form id="contact-form" class="contact-form" novalidate>
+      <div class="contact-line">
+        <span class="lime">&gt;</span>
+        <input id="msg" name="message" autocomplete="off" placeholder="say something" aria-label="Your message">
+        <button type="submit" aria-label="Send">→</button>
+      </div>
+      <div class="contact-hint mono"><span id="hint">A short note is enough</span><span>Enter to send</span></div>
+    </form>
+    <div id="sent" class="contact-sent" hidden>Message received<span class="lime blink">_</span></div>
+    <footer class="mono">
+      <span>© 2026 <span data-name>Your Name</span></span>
+      <a id="email-link" href="mailto:you@email.com">you@email.com</a>
+      <span>LinkedIn · GitHub · X</span>
+    </footer>
+  </div>
+</section>
+
+<script src="main.js"></script>
+</body>
+</html>
