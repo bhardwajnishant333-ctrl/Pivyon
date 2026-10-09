@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+html{scroll-behavior:smooth}
+body{margin:0;background:#f6f3ee;color:#1d1b18;font-family:'Bricolage Grotesque',sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#1d1b18}a:hover{color:oklch(0.62 0.19 38)}
+::selection{background:oklch(0.62 0.19 38);color:#fff}
+</style>
+</helmet>
+<div style="min-height:100vh">
+
+<header style="position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:24px;padding:18px clamp(20px,4vw,56px);background:rgba(246,243,238,.82);backdrop-filter:blur(12px);border-bottom:1px solid rgba(29,27,24,.08)">
+  <a href="#top" style="display:flex;align-items:center;gap:10px;text-decoration:none;font-weight:600;font-size:19px;letter-spacing:-.02em">
+    <span style="width:14px;height:14px;border-radius:50%;background:oklch(0.62 0.19 38)"></span>Undrawn
+  </a>
+  <nav style="display:flex;gap:28px;font:500 12px 'IBM Plex Mono',monospace;text-transform:uppercase;letter-spacing:.06em">
+    <a href="#method" style="text-decoration:none">Method</a>
+    <a href="#work" style="text-decoration:none">Work</a>
+    <a href="#contact" style="text-decoration:none">Contact</a>
+  </nav>
+</header>
+
+<section id="top" style="position:relative;display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:clamp(24px,4vw,64px);align-items:center;padding:clamp(40px,7vw,96px) clamp(20px,4vw,56px) clamp(48px,6vw,80px);max-width:1440px;margin:0 auto">
+  <div style="display:flex;flex-direction:column;gap:32px;min-width:0">
+    <div style="font:500 12px 'IBM Plex Mono',monospace;text-transform:uppercase;letter-spacing:.08em;color:#6b655c">Venture &amp; product innovation studio</div>
+    <h1 style="margin:0;font-weight:500;font-size:clamp(48px,7vw,112px);line-height:.94;letter-spacing:-.045em">
+      We turn<br>
+      <span style="display:inline-block;height:.98em;overflow:hidden;vertical-align:top;color:oklch(0.62 0.19 38)">
+        <span style="display:flex;flex-direction:column;transition:transform .8s cubic-bezier(.7,0,.2,1);transform:translateY({{ wordOffset }})">
+          <sc-for list="{{ words }}" as="w" hint-placeholder-count="4"><span style="height:.98em;line-height:.98em">{{ w }}</span></sc-for>
+        </span>
+      </span><br>
+      into ventures.
+    </h1>
+    <p style="margin:0;max-width:30em;font-size:clamp(17px,1.4vw,20px);line-height:1.5;color:#4a453e;text-wrap:pretty">Undrawn works with founders and corporate teams on the ideas that don't fit a roadmap yet. We find the signal, test it in weeks, and build what survives.</p>
+    <div style="display:flex;flex-wrap:wrap;gap:12px">
+      <a href="#contact" style="display:inline-flex;align-items:center;gap:10px;padding:16px 24px;border-radius:999px;background:#1d1b18;color:#f6f3ee;text-decoration:none;font-weight:500;font-size:16px;transition:background .2s" style-hover="background:oklch(0.62 0.19 38);color:#fff">Start a sprint <span>→</span></a>
+      <a href="#method" style="display:inline-flex;align-items:center;padding:16px 24px;border-radius:999px;border:1px solid rgba(29,27,24,.2);text-decoration:none;font-weight:500;font-size:16px;transition:border-color .2s" style-hover="border-color:#1d1b18">How we work</a>
+    </div>
+  </div>
+
+  <div style="position:relative;aspect-ratio:1/1;min-width:0;border-radius:20px;background:#1d1b18;overflow:hidden">
+    <canvas ref="{{ canvasRef }}" style="position:absolute;inset:0;width:100%;height:100%;display:block;cursor:crosshair"></canvas>
+    <div style="position:absolute;left:20px;right:20px;bottom:18px;display:flex;justify-content:space-between;align-items:flex-end;gap:12px;pointer-events:none;font:500 11px 'IBM Plex Mono',monospace;text-transform:uppercase;letter-spacing:.08em;color:#f6f3ee">
+      <div style="display:flex;gap:14px;flex:1;min-width:0">
+        <sc-for list="{{ phaseDots }}" as="p" hint-placeholder-count="4">
+          <span style="display:flex;flex-direction:column;gap:6px;flex:1 1 0;min-width:0;max-width:110px;white-space:nowrap;font-size:10px">
+            <span style="height:2px;background:rgba(246,243,238,.18);position:relative;overflow:hidden"><span style="position:absolute;inset:0;background:oklch(0.72 0.17 45);transform-origin:left;transform:scaleX({{ p.fill }})"></span></span>
+            <span style="opacity:{{ p.opacity }}">{{ p.label }}</span>
+          </span>
+        </sc-for>
+      </div>
+      <span style="color:#a39b8f">0{{ phaseNum }} / 04</span>
+    </div>
+    <div style="position:absolute;top:18px;left:20px;font:500 11px 'IBM Plex Mono',monospace;text-transform:uppercase;letter-spacing:.08em;color:#a39b8f;pointer-events:none">Move your cursor through it</div>
+  </div>
+</section>
+
+<div style="overflow:hidden;border-top:1px solid rgba(29,27,24,.1);border-bottom:1px solid rgba(29,27,24,.1);padding:22px 0">
+  {{ marquee }}
+</div>
+
+<section id="method" ref="{{ methodRef }}" style="position:relative;height:340vh">
+  <div style="position:sticky;top:64px;height:calc(100vh - 64px);display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(24px,4vw,64px);align-items:center;padding:0 clamp(20px,4vw,56px);max-width:1440px;margin:0 auto;box-sizing:border-box">
+    <div style="display:flex;flex-direction:column;gap:28px;min-width:0">
+      <div style="font:500 12px 'IBM Plex Mono',monospace;text-transform:uppercase;letter-spacing:.08em;color:#6b655c">Method — twelve weeks, four gates</div>
+      <div style="display:flex;flex-direction:column">
+        <sc-for list="{{ steps }}" as="s" hint-placeholder-count="4">
+          <div style="display:grid;grid-template-columns:56px minmax(0,1fr);gap:16px;padding:20px 0;border-top:1px solid rgba(29,27,24,.12);opacity:{{ s.opacity }};transition:opacity .4s">
+            <span style="font:500 13px 'IBM Plex Mono',monospace;color:oklch(0.62 0.19 38);padding-top:8px">{{ s.n }}</span>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <div style="font-size:clamp(26px,3vw,40px);font-weight:500;letter-spacing:-.03em;line-height:1.05">{{ s.title }}</div>
+              <div style="max-height:{{ s.bodyH }};overflow:hidden;transition:max-height .5s ease">
+                <p style="margin:0;max-width:30em;font-size:17px;line-height:1.5;color:#4a453e;text-wrap:pretty">{{ s.body }}</p>
+              </div>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+    <div style="position:relative;min-width:0;aspect-ratio:4/5;max-height:72vh;justify-self:center;width:100%;border-radius:20px;background:#ebe5db;overflow:hidden">
+      {{ methodVisual }}
+      <div style="position:absolute;left:20px;bottom:18px;font:500 11px 'IBM Plex Mono',monospace;text-transform:uppercase;letter-spacing:.08em;color:#6b655c">Week {{ weekLabel }}</div>
+      <div style="position:absolute;left:0;right:0;top:0;height:3px;background:rgba(29,27,24,.08)"><div style="height:100%;background:oklch(0.62 0.19 38);width:{{ methodPct }}"></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="work" style="padding:clamp(64px,8vw,120px) clamp(20px,4vw,56px);max-width:1440px;margin:0 auto">
+  <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:24px;margin-bottom:48px">
+    <h2 style="margin:0;font-weight:500;font-size:clamp(36px,5vw,72px);letter-spacing:-.04em;line-height:1">Things that<br>didn't exist yet</h2>
+    <div style="display:flex;gap:8px">
+      <sc-for list="{{ filters }}" as="f" hint-placeholder-count="4">
+        <button onClick="{{ f.onClick }}" style="padding:10px 16px;border-radius:999px;border:1px solid {{ f.border }};background:{{ f.bg }};color:{{ f.fg }};font:500 12px 'IBM Plex Mono',monospace;text-transform:uppercase;letter-spacing:.06em;cursor:pointer;transition:all .2s">{{ f.label }}</button>
+      </sc-for>
+    </div>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,380px),1fr));gap:20px">
+    <sc-for list="{{ projects }}" as="p" hint-placeholder-count="3">
+      <article style="display:flex;flex-direction:column;gap:16px;cursor:pointer;transition:transform .35s cubic-bezier(.2,.7,.2,1)" style-hover="transform:translateY(-6px)">
+        <div style="aspect-ratio:4/3;border-radius:16px;background:repeating-linear-gradient(135deg,#ebe5db 0 10px,#e4ddd1 10px 20px);display:flex;align-items:flex-end;padding:16px;box-sizing:border-box;font:500 11px 'IBM Plex Mono',monospace;color:#7c7468">{{ p.ph }}</div>
+        <div style="display:flex;justify-content:space-between;gap:12px;align-items:baseline">
+          <div style="font-size:24px;font-weight:500;letter-spacing:-.02em">{{ p.name }}</div>
+          <div style="font:500 11px 'IBM Plex Mono',monospace;text-transform:uppercase;letter-spacing:.06em;color:oklch(0.62 0.19 38)">{{ p.tag }}</div>
+        </div>
+        <p style="margin:0;font-size:16px;line-height:1.5;color:#4a453e;text-wrap:pretty">{{ p.desc }}</p>
+      </article>
+    </sc-for>
+  </div>
+</section>
+
+<section id="contact" style="background:#1d1b18;color:#f6f3ee;padding:clamp(64px,8vw,120px) clamp(20px,4vw,56px)">
+  <div style="max-width:1440px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:48px;align-items:end">
+    <h2 style="margin:0;font-weight:500;font-size:clamp(44px,6.5vw,104px);letter-spacing:-.045em;line-height:.95">Bring us the idea<br>you can't <span style="color:oklch(0.72 0.17 45)">justify</span> yet.</h2>
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <sc-if value="{{ notSent }}" hint-placeholder-val="{{ true }}">
+        <div style="font:500 12px 'IBM Plex Mono',monospace;text-transform:uppercase;letter-spacing:.08em;color:#a39b8f">Two-week discovery sprint · next opening November</div>
+        <div style="display:flex;gap:8px;border-bottom:1px solid {{ lineColor }};padding-bottom:10px;transition:border-color .2s">
+          <input value="{{ email }}" onChange="{{ onEmail }}" onKeyDown="{{ onKey }}" placeholder="you@company.com" style="flex:1;min-width:0;background:transparent;border:0;outline:none;color:#f6f3ee;font:400 clamp(20px,2vw,28px) 'Bricolage Grotesque',sans-serif;padding:8px 0">
+          <button onClick="{{ submit }}" style="padding:14px 22px;border-radius:999px;border:0;background:oklch(0.72 0.17 45);color:#1d1b18;font:600 15px 'Bricolage Grotesque',sans-serif;cursor:pointer;transition:transform .2s" style-hover="transform:scale(1.04)">Send →</button>
+        </div>
+        <div style="min-height:18px;font:500 12px 'IBM Plex Mono',monospace;color:oklch(0.75 0.15 30)">{{ error }}</div>
+      </sc-if>
+      <sc-if value="{{ sent }}">
+        <div style="font-size:clamp(22px,2.4vw,32px);line-height:1.3;letter-spacing:-.02em">Received. We'll reply to <span style="color:oklch(0.72 0.17 45)">{{ email }}</span> within two working days.</div>
+      </sc-if>
+    </div>
+  </div>
+  <div style="max-width:1440px;margin:96px auto 0;display:flex;flex-wrap:wrap;justify-content:space-between;gap:16px;font:500 11px 'IBM Plex Mono',monospace;text-transform:uppercase;letter-spacing:.08em;color:#7c7468">
+    <span>Undrawn Studio</span><span>Lisbon · Rotterdam</span><span>hello@undrawn.studio</span>
+  </div>
+</section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;speed&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:1,&quot;min&quot;:0.3,&quot;max&quot;:2.5,&quot;step&quot;:0.1,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Hero animation&quot;},&quot;interactive&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Hero animation&quot;},&quot;density&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:520,&quot;min&quot;:150,&quot;max&quot;:1200,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Hero animation&quot;}}">
+class Component extends DCLogic {
+  state = { word: 0, phase: 0, phaseT: 0, step: 0, stepP: 0, filter: 'All', email: '', error: '', sent: false };
+  canvasRef = React.createRef();
+  methodRef = React.createRef();
+  words = ['hunches', 'signals', 'oddities', 'what-ifs'];
+  labels = ['Signal', 'Hypothesis', 'Prototype', 'Venture'];
+
+  componentDidMount() {
+    this.wordTimer = setInterval(() => this.setState(s => ({ word: (s.word + 1) % this.words.length })), 2400);
+    this.onScroll = () => {
+      const el = this.methodRef.current; if (!el) return;
+      const r = el.getBoundingClientRect();
+      const p = Math.min(1, Math.max(0, -r.top / (r.height - window.innerHeight)));
+      const step = Math.min(3, Math.floor(p * 4));
+      if (step !== this.state.step || Math.abs(p - this.state.stepP) > 0.004) this.setState({ step, stepP: p });
+    };
+    window.addEventListener('scroll', this.onScroll, { passive: true });
+    this.onScroll();
+    this.initCanvas();
+  }
+  componentWillUnmount() {
+    clearInterval(this.wordTimer); cancelAnimationFrame(this.raf);
+    window.removeEventListener('scroll', this.onScroll); this.ro && this.ro.disconnect();
+  }
+
+  initCanvas() {
+    const c = this.canvasRef.current; if (!c) return;
+    const ctx = c.getContext('2d');
+    let W = 0, H = 0, dpr = 1;
+    const resize = () => { dpr = window.devicePixelRatio || 1; W = c.clientWidth; H = c.clientHeight; c.width = W * dpr; c.height = H * dpr; };
+    this.ro = new ResizeObserver(resize); this.ro.observe(c); resize();
+    const N = Math.round(this.props.density ?? 520);
+    let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+    const P = Array.from({ length: N }, () => ({ x: rnd(), y: rnd(), vx: 0, vy: 0, r: rnd(), a: rnd() * Math.PI * 2, px: 0, py: 0 }));
+    P.forEach(p => { p.px = p.x; p.py = p.y; });
+    const mouse = { x: -1, y: -1, on: false };
+    c.addEventListener('pointermove', e => { const b = c.getBoundingClientRect(); mouse.x = e.clientX - b.left; mouse.y = e.clientY - b.top; mouse.on = true; });
+    c.addEventListener('pointerleave', () => { mouse.on = false; });
+    const cols = Math.ceil(Math.sqrt(N));
+    const target = (ph, i, p, t) => {
+      const m = Math.min(W, H), cx = W / 2, cy = H / 2 - m * 0.04;
+      if (ph === 0) return [p.x * W + Math.sin(t * 0.6 + p.a) * 24, p.y * H + Math.cos(t * 0.5 + p.a * 1.3) * 24];
+      if (ph === 1) { const k = i / N * Math.PI * 2 + t * 0.15, rr = m * (0.26 + (i % 3) * 0.035) + Math.sin(k * 6 + t) * m * 0.015; return [cx + Math.cos(k) * rr, cy + Math.sin(k) * rr]; }
+      if (ph === 2) { const s = m * 0.52, g = s / (cols - 1); return [cx - s / 2 + (i % cols) * g, cy - s / 2 + Math.floor(i / cols) * g]; }
+      const u = i / N, x = W * 0.1 + u * W * 0.8, lift = Math.pow(u, 2.2) * m * 0.5;
+      return [x, cy + m * 0.22 - lift + Math.sin(u * 18 - t * 2) * m * 0.02 * (1 - u) + ((i % 4) - 1.5) * 3];
+    };
+    const PH = 4200; let start = performance.now(), last = -1;
+    const frame = now => {
+      const speed = this.props.speed ?? 1;
+      const el = (now - start) * speed, t = el / 1000;
+      const ph = Math.floor(el / PH) % 4, pt = (el % PH) / PH;
+      if (ph !== last || Math.abs(pt - this.state.phaseT) > 0.03) { last = ph; this.setState({ phase: ph, phaseT: pt }); }
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.fillStyle = 'rgba(29,27,24,0.28)'; ctx.fillRect(0, 0, W, H);
+      const interactive = this.props.interactive ?? true;
+      for (let i = 0; i < N; i++) {
+        const p = P[i]; const [tx, ty] = target(ph, i, p, t);
+        const k = 0.035 + p.r * 0.03;
+        p.vx += (tx - p.px) * k * 0.25 * speed; p.vy += (ty - p.py) * k * 0.25 * speed;
+        if (interactive && mouse.on) {
+          const dx = p.px - mouse.x, dy = p.py - mouse.y, d2 = dx * dx + dy * dy, R = 90;
+          if (d2 < R * R) { const d = Math.sqrt(d2) || 1, f = (1 - d / R) * 4; p.vx += dx / d * f; p.vy += dy / d * f; }
+        }
+        p.vx *= 0.82; p.vy *= 0.82; p.px += p.vx; p.py += p.vy;
+        const hot = i % 9 === 0 || (ph === 3 && i / N > 0.85);
+        ctx.fillStyle = hot ? 'oklch(0.72 0.17 45)' : 'rgba(246,243,238,0.85)';
+        const s = hot ? 2.6 : 1.6;
+        ctx.fillRect(p.px - s / 2, p.py - s / 2, s, s);
+      }
+      this.raf = requestAnimationFrame(frame);
+    };
+    ctx.fillStyle = '#1d1b18'; ctx.fillRect(0, 0, c.width, c.height);
+    this.raf = requestAnimationFrame(frame);
+  }
+
+  marquee() {
+    const items = ['Climate', 'Health systems', 'Materials', 'Mobility', 'Civic tech', 'Food', 'Energy', 'Fintech'];
+    const row = [...items, ...items].map((t, i) => React.createElement('span', { key: i, style: { display: 'inline-flex', alignItems: 'center', gap: 28, paddingRight: 28 } },
+      t, React.createElement('span', { style: { width: 8, height: 8, borderRadius: '50%', background: 'oklch(0.62 0.19 38)' } })));
+    return React.createElement('div', { style: { display: 'flex', width: 'max-content', whiteSpace: 'nowrap', fontSize: 'clamp(24px,3vw,40px)', fontWeight: 400, letterSpacing: '-.02em', animation: 'none' }, ref: el => {
+      if (el && !el._anim) el._anim = el.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(-50%)' }], { duration: 38000, iterations: Infinity });
+    } }, row);
+  }
+
+  methodVisual(step, p) {
+    const local = Math.min(1, Math.max(0, p * 4 - step));
+    const cells = [];
+    const n = 48;
+    for (let i = 0; i < n; i++) {
+      const col = i % 6, row = Math.floor(i / 6);
+      let on, accent = false;
+      if (step === 0) { on = ((i * 37) % 11) / 11 < 0.25 + local * 0.3; accent = (i * 37) % 11 === 0; }
+      else if (step === 1) { on = col >= 1 && col <= 4 && row >= 2 && row <= 5; accent = on && row === 2 + Math.floor(local * 4) % 4; }
+      else if (step === 2) { on = row >= 7 - Math.floor(local * 6) - (col % 2); accent = on && col === 3; }
+      else { on = row >= 7 - col - Math.floor(local * 2); accent = on && row <= 7 - col; }
+      cells.push(React.createElement('div', { key: i, style: {
+        borderRadius: step === 0 ? '50%' : 6, background: accent ? 'oklch(0.62 0.19 38)' : on ? '#1d1b18' : 'rgba(29,27,24,.07)',
+        transform: on ? 'scale(1)' : 'scale(.55)', transition: `all .6s cubic-bezier(.2,.7,.2,1) ${(i % 6) * 30 + row * 20}ms` } }));
+    }
+    return React.createElement('div', { style: { position: 'absolute', inset: '12% 12% 16%', display: 'grid', gridTemplateColumns: 'repeat(6,1fr)', gridTemplateRows: 'repeat(8,1fr)', gap: 10 } }, cells);
+  }
+
+  renderVals() {
+    const { word, phase, phaseT, step, stepP, filter, email, error, sent } = this.state;
+    const steps = [
+      ['Find the signal', 'Weeks 1–2. We interview the edges: users, operators, regulators. We look for the behaviour that is already happening without a product.'],
+      ['Frame the bet', 'Weeks 3–4. One sentence, one metric, one kill condition. If we can\'t write it down, we don\'t build it.'],
+      ['Prototype in public', 'Weeks 5–9. Working software in front of real people, shipped weekly. We measure what they do, not what they say.'],
+      ['Spin out or stop', 'Weeks 10–12. A venture case with evidence attached, or a clear record of why it should not exist. Both are outcomes.']
+    ].map(([title, body], i) => ({ n: '0' + (i + 1), title, body, opacity: i === step ? 1 : 0.32, bodyH: i === step ? '160px' : '0px' }));
+    const all = [
+      { name: 'Tidewell', tag: 'Climate', desc: 'Sensor-backed insurance for coastal farms, spun out with a regional reinsurer.', ph: 'product shot — field sensor' },
+      { name: 'Lull', tag: 'Health', desc: 'A night-shift companion for ICU nurses that reduced handover errors in a 6-ward pilot.', ph: 'app screens — night mode' },
+      { name: 'Ferrous', tag: 'Materials', desc: 'Marketplace for reclaimed structural steel, now trading across three countries.', ph: 'photo — steel yard' },
+      { name: 'Ward Ledger', tag: 'Civic', desc: 'Participatory budgeting tool used by two city councils to allocate local funds.', ph: 'UI — voting flow' },
+      { name: 'Cinder', tag: 'Climate', desc: 'Waste-heat mapping for industrial parks, matching emitters with nearby demand.', ph: 'map visual — heat overlay' },
+      { name: 'Prism Pay', tag: 'Health', desc: 'Pre-visit cost estimates for outpatient clinics. Stopped at week 11; findings sold to a payer.', ph: 'UI — estimate card' }
+    ];
+    const tags = ['All', 'Climate', 'Health', 'Civic'];
+    const valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    const submit = () => valid ? this.setState({ sent: true, error: '' }) : this.setState({ error: email ? 'That address looks incomplete.' : 'Add an email so we can reply.' });
+    return {
+      canvasRef: this.canvasRef, methodRef: this.methodRef,
+      words: this.words, wordOffset: `-${word * 0.98}em`,
+      phaseNum: phase + 1,
+      phaseDots: this.labels.map((label, i) => ({ label, fill: i < phase ? 1 : i === phase ? phaseT : 0, opacity: i === phase ? 1 : 0.45 })),
+      marquee: this.marquee(),
+      steps, methodVisual: this.methodVisual(step, stepP),
+      weekLabel: String(Math.max(1, Math.ceil(stepP * 12))).padStart(2, '0'), methodPct: `${stepP * 100}%`,
+      filters: tags.map(t => ({ label: t, onClick: () => this.setState({ filter: t }), bg: t === filter ? '#1d1b18' : 'transparent', fg: t === filter ? '#f6f3ee' : '#1d1b18', border: t === filter ? '#1d1b18' : 'rgba(29,27,24,.2)' })),
+      projects: all.filter(p => filter === 'All' || p.tag === filter),
+      email, error, sent, notSent: !sent,
+      lineColor: error ? 'oklch(0.75 0.15 30)' : 'rgba(246,243,238,.3)',
+      onEmail: e => this.setState({ email: e.target.value, error: '' }),
+      onKey: e => { if (e.key === 'Enter') submit(); },
+      submit
+    };
+  }
+}
+</script>
+</body>
+</html>
