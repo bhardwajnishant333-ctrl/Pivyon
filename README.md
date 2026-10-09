@@ -1,25 +1,30 @@
-# CODING AGENTS: READ THIS FIRST
+# AI Portfolio
 
-This is a **handoff bundle** from Claude Design (claude.ai/design).
+A dark, kinetic one-page portfolio and a 23.5-second explainer video. Plain HTML, CSS and JavaScript — no build step, no dependencies.
 
-A user mocked up designs in HTML/CSS/JS using an AI design tool, then exported this bundle so a coding agent can implement the designs for real.
+- `index.html`, `styles.css`, `main.js` — the portfolio site
+- `explainer/` — the explainer video (1920×1080, looping, with a playback bar)
+- `design/` — the original Claude Design handoff (prototypes and chat transcript), kept for reference
 
-## What you should do — IMPORTANT
+## Run locally
 
-**Read the chat transcripts first.** There are 1 chat transcript(s) in `chats/`. The transcripts show the full back-and-forth between the user and the design assistant — they tell you **what the user actually wants** and **where they landed** after iterating. Don't skip them. The final HTML files are the output, but the chat is where the intent lives.
+Serve the folder with any static server, for example:
 
-**Read `project/Explainer Video.dc.html` in full.** The user had this file open when they triggered the handoff, so it's almost certainly the primary design they want built. Read it top to bottom — don't skim. Then **follow its imports**: open every file it pulls in (shared components, CSS, scripts) so you understand how the pieces fit together before you start implementing.
+```sh
+python3 -m http.server 8000
+```
 
-**If anything is ambiguous, ask the user to confirm before you start implementing.** It's much cheaper to clarify scope up front than to build the wrong thing.
+Then open http://localhost:8000 (site) and http://localhost:8000/explainer/ (video).
 
-## About the design files
+## Customise
 
-The design medium is **HTML/CSS/JS** — these are prototypes, not production code. Your job is to **recreate them pixel-perfectly** in whatever technology makes sense for the target codebase (React, Vue, native, whatever fits). Match the visual output; don't copy the prototype's internal structure unless it happens to fit.
+- Name, email, ticker speed and cursor reactivity: `SITE` at the top of `main.js`
+- Name in the video's closing frame: `NAME` in `explainer/explainer.js`, or `explainer/?name=Your+Name`
+- Video scene lengths: `SCENES` at the top of `explainer/explainer.js`
+- Work area copy: `DOMAINS` in `main.js` (the striped boxes are image placeholders)
 
-**Don't render these files in a browser or take screenshots unless the user asks you to.** Everything you need — dimensions, colors, layout rules — is spelled out in the source. Read the HTML and CSS directly; a screenshot won't tell you anything they don't.
+Video controls: space = play/pause, ← / → = step (shift for 1s), 0 = start.
 
-## Bundle contents
+## Deploy
 
-- `README.md` — this file
-- `chats/` — conversation transcripts (read these!)
-- `project/` — the `Innovation Studio Web Design` project files (HTML prototypes, assets, components)
+Any static host works. On GitHub Pages: Settings → Pages → Deploy from branch → `main` / root.
