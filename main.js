@@ -4,7 +4,7 @@
 // ── Site config: replace these placeholders ──────────────────────────────
 const SITE = {
   name: 'Pivyon',
-  email: 'you@email.com',
+  email: 'hello@pivyon.com',
   reactivity: 1, // 0–2: how strongly the dot field reacts to the cursor
 };
 
