@@ -2,7 +2,7 @@
 
 The permanent record of how Pivyon was built (started 9 Oct 2026). If a chat is ever lost, everything needed to continue is here.
 
-**Original conversation:** https://claude.ai/code/session_01Er8ch1eNWTcg9rijvwfmh2 — titled “⭐ PIVYON — website, Probe, brand (main build)”
+**Original conversation:** https://claude.ai/code/session_01Er8ch1eNWTcg9rijvwfmh2 — titled “⭐ 1 · PIVYON — website, Probe, brand”
 
 ---
 
