@@ -742,6 +742,35 @@ function renderTerm(now, H) {
   if (now - termState.last > (termState.count < 4 ? 650 : 2200)) { termState.last = now; addFinding(); }
 }
 
+// ── Build log: decode names, scramble the unnamed, animate "Loading…" ────
+const GLYPHS = '█▓▒░<>/\\_#01?';
+const scrambleRand = () => GLYPHS[Math.floor(Math.random() * GLYPHS.length)];
+const decodeEls = Array.from(document.querySelectorAll('[data-decode]')).map((el) => ({ el, text: el.textContent, start: null }));
+const scrambleEls = Array.from(document.querySelectorAll('[data-scramble]')).map((el) => ({ el, n: +el.dataset.scramble, last: 0 }));
+const slotsEls = Array.from(document.querySelectorAll('.slot'));
+const buildLoading = $('build-loading'), buildSection = $('probe');
+decodeEls.forEach((d) => { d.el.textContent = d.text.replace(/\S/g, scrambleRand); });
+function renderBuild(now, H) {
+  buildLoading.dataset.dots = '.'.repeat(1 + Math.floor(now / 450) % 3).padEnd(3, ' ');
+  for (const s of slotsEls) if (!s.classList.contains('in') && s.getBoundingClientRect().top < H * 0.9) s.classList.add('in');
+  for (const d of decodeEls) {
+    if (d.start === null) {
+      if (d.el.getBoundingClientRect().top < H * 0.88) d.start = now; else continue;
+    }
+    const k = reduceMotion ? 1 : clamp((now - d.start) / 900, 0, 1);
+    const shown = Math.floor(k * d.text.length);
+    if (k >= 1) { if (d.el.textContent !== d.text) d.el.textContent = d.text; continue; }
+    d.el.textContent = d.text.slice(0, shown) + d.text.slice(shown).replace(/\S/g, scrambleRand);
+  }
+  for (const s of scrambleEls) {
+    if (s.last && now - s.last < (reduceMotion ? 1e9 : 90)) continue;
+    s.last = now;
+    let out = '';
+    for (let i = 0; i < s.n; i++) out += (i === 4 && s.n > 8) ? ' ' : scrambleRand();
+    s.el.textContent = out;
+  }
+}
+
 // ── Frame loop ───────────────────────────────────────────────────────────
 const t0 = performance.now();
 function frame(now) {
@@ -756,6 +785,7 @@ function frame(now) {
   renderBio(H);
   renderCounters(now, H);
   renderTerm(now, H);
+  if (near(buildSection, H)) renderBuild(now, H);
   requestAnimationFrame(frame);
 }
 requestAnimationFrame(frame);
