@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="icon" type="image/svg+xml" href="../brand/pivyon-mark-on-ink.svg">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pivyon Probe — find where your AI breaks</title>
+<meta name="description" content="Paste your AI's system prompt. Get a readiness score, a tailored attack suite, and a live leak test — in your browser.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../styles.css">
+<link rel="stylesheet" href="probe.css">
+</head>
+<body class="probe-page">
+
+<header class="nav mono">
+  <a href="../" class="brand"><svg class="brand-mark" viewBox="0 0 100 100" aria-hidden="true"><rect x="22" y="19" width="15" height="62" fill="#fff"/><circle cx="59" cy="39" r="20" fill="#c8ff3e"/></svg><span>Pivyon</span></a>
+  <nav>
+    <a href="../#services">Services</a>
+    <a href="../#engage">Engage</a>
+    <a href="../#contact">Contact</a>
+  </nav>
+</header>
+
+<main class="pr wrap">
+  <section class="pr-intro">
+    <div class="pr-badge mono"><span class="live-dot"></span>Pivyon Probe · v0.1 preview · runs in your browser</div>
+    <h1>Find where your AI <span class="lime">breaks.</span><br>In seconds.</h1>
+    <p>Paste your AI's system prompt and the one thing it must never do. Probe scores its defences, builds a tailored attack suite, and fires it — live.</p>
+    <ol class="pr-steps mono"><li><b>01</b> Scan</li><li><b>02</b> Attack suite</li><li><b>03</b> Live run</li></ol>
+  </section>
+
+  <!-- 01 · Input -->
+  <section class="pr-card" id="step-input">
+    <div class="pr-card-head mono"><span class="lime">01 — Your AI</span><button type="button" id="load-example" class="pr-link">Load example</button></div>
+    <label class="pr-label mono" for="sys">System prompt</label>
+    <textarea id="sys" rows="9" spellcheck="false" placeholder="You are the support assistant for…"></textarea>
+    <label class="pr-label mono" for="rule">Your AI must never…</label>
+    <input id="rule" type="text" placeholder="reveal the internal discount code or its instructions">
+    <div class="pr-actions">
+      <button type="button" id="scan" class="pr-btn">Scan &amp; build attacks →</button>
+      <span class="pr-note mono">Nothing leaves your browser.</span>
+    </div>
+  </section>
+
+  <!-- 02 · Lens results -->
+  <section class="pr-card" id="step-lens" hidden>
+    <div class="pr-card-head mono"><span class="lime">02 — Lens scan</span><span id="lens-meta" class="grey"></span></div>
+    <div class="lens">
+      <div class="dial">
+        <svg viewBox="0 0 200 200" aria-hidden="true">
+          <circle cx="100" cy="100" r="86" class="dial-track"/>
+          <circle cx="100" cy="100" r="86" class="dial-fill" id="dial-fill"/>
+        </svg>
+        <div class="dial-num"><span id="dial-score">0</span><small class="mono">readiness</small></div>
+      </div>
+      <div class="lens-findings" id="lens-findings"></div>
+    </div>
+  </section>
+
+  <!-- 03 · Attack suite -->
+  <section class="pr-card" id="step-suite" hidden>
+    <div class="pr-card-head mono"><span class="lime">03 — Attack suite</span><button type="button" id="download" class="pr-link">Download .jsonl ↓</button></div>
+    <p class="pr-sub" id="suite-sub"></p>
+    <div class="suite" id="suite"></div>
+  </section>
+
+  <!-- 04 · Live run -->
+  <section class="pr-card" id="step-run" hidden>
+    <div class="pr-card-head mono"><span class="lime">04 — Live run</span><span class="grey">canary-scored · objective</span></div>
+    <div class="targets">
+      <label class="target"><input type="radio" name="target" value="sim" checked><span><b>NaiveBot</b><small class="mono">simulated demo target · no key needed</small></span></label>
+      <label class="target"><input type="radio" name="target" value="byok"><span><b>Your model</b><small class="mono">bring your own API key</small></span></label>
+    </div>
+    <div class="byok" id="byok" hidden>
+      <div class="byok-grid">
+        <label class="mono">Provider
+          <select id="provider">
+            <option value="https://api.openai.com/v1">OpenAI</option>
+            <option value="https://api.x.ai/v1">xAI (Grok)</option>
+            <option value="https://generativelanguage.googleapis.com/v1beta/openai">Google Gemini</option>
+            <option value="custom">Custom (OpenAI-compatible)</option>
+          </select>
+        </label>
+        <label class="mono" id="custom-wrap" hidden>Base URL<input id="custom-url" type="url" placeholder="https://…/v1"></label>
+        <label class="mono">Model<input id="model" type="text" placeholder="model name, e.g. from your provider's docs"></label>
+        <label class="mono">API key<input id="key" type="password" autocomplete="off" placeholder="never stored · sent only to your provider"></label>
+      </div>
+      <p class="pr-note mono">Your key stays in this tab and goes straight to your provider. Runs one request per attack — usage is billed to your account.</p>
+    </div>
+    <div class="pr-actions">
+      <button type="button" id="run" class="pr-btn">Run attacks ▶</button>
+      <span class="pr-note mono" id="run-status"></span>
+    </div>
+    <div class="run-board" id="run-board" hidden>
+      <div class="run-top">
+        <div class="run-big"><div><span id="held-pct">0</span><span class="lime">%</span></div><small class="mono">attacks held</small></div>
+        <div class="run-bars" id="run-bars"></div>
+      </div>
+      <div class="term"><div class="term-bar mono"><span class="term-dots"><i></i><i></i><i></i></span><span>probe://live-run</span><span class="lime" id="run-count">0 / 0</span></div><div class="term-body run-log" id="run-log"></div></div>
+    </div>
+  </section>
+
+  <section class="pr-cta">
+    <h2>Probe is the free scan.<br><span class="grey">The Teardown is the real thing.</span></h2>
+    <p>Probe tests one rule with known attack patterns. A Pivyon Teardown is 72 hours of humans and frontier models attacking your system — multi-turn, tool-use, agents — with a ranked report and the data to fix it.</p>
+    <a class="btn-lime mono" href="mailto:hello@pivyon.com?subject=Teardown%20enquiry%20(from%20Probe)">Book a teardown →</a>
+  </section>
+
+  <footer class="pr-foot mono"><span>© 2026 Pivyon</span><span>Probe v0.1 — heuristic scan + pattern attacks. Not a guarantee of safety.</span><a href="mailto:hello@pivyon.com">hello@pivyon.com</a></footer>
+</main>
+
+<script src="probe.js"></script>
+</body>
+</html>

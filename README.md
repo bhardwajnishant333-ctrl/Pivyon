@@ -5,6 +5,7 @@ Exploring the frontiers of artificial intelligence through advanced AI experimen
 A dark, kinetic site for Pivyon's frontier-AI services — frontier evals, red-teaming, post-training data and RL environments. The hero plays the explainer film live, then rests on a real-time loss landscape; services, findings and engagements are all animated in the browser. Plain HTML, CSS and JavaScript — no build step, no dependencies.
 
 - `index.html`, `styles.css`, `main.js` — the portfolio site
+- `probe/` — **Pivyon Probe v0.1**: paste a system prompt, get a readiness score, a tailored 26-attack suite (.jsonl), and a live, canary-scored leak test against a simulated target or your own model (bring your own key). Runs entirely in the browser.
 - `explainer/` — the explainer video (1920×1080, looping, with a playback bar)
 - `design/` — the original Claude Design handoff (prototypes and chat transcript), kept for reference
 
